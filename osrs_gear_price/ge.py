@@ -6,8 +6,9 @@ from typing import TypedDict
 import requests
 
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+logger.propagate = True
 
 
 class ItemPrices(TypedDict):
@@ -61,7 +62,7 @@ class GrandExchange:
             logger.debug(f"Item ID {item_id} not found in cache")
             self.cache_miss += 1
             raise ValueError(
-                f"Item ID {item_id} not found in cache. It is probably not frequently traded on the GE"
+                f"Item ID {item_id} not found in cache. It is probably not frequently traded on the GE."
             )
 
     def update_cache(self):

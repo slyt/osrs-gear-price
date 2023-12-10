@@ -3,21 +3,20 @@ import logging
 import pandas as pd
 from osrsbox import items_api
 
-from osrs_gear_price import GrandExchange
+from osrs_gear_price.ge import GrandExchange
+from osrs_gear_price.util import format_number
 
 # from osrs_gear_price.util import json_pprint
 
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+logger.propagate = True
 
 ge = GrandExchange()
-
-
 items = items_api.load()  # Load all items into memory
 
 row_list = []  # create list of dicts to convert to dataframe later
-
 exception_count = 0
 
 for item in items:
@@ -36,15 +35,16 @@ for item in items:
         item_prices = ge.get_item(item.id)
         avgHighPrice = item_prices["avgHighPrice"]
         # format avgHighPrice to have commas at thousands, millions, etc
-        avgHighPrice = "{:,}".format(avgHighPrice)
-        print(f"{item.name}-------{avgHighPrice}")
+        print(f"{item.name} ({item.id})-------{avgHighPrice}")
+        avgHighPrice = format_number(avgHighPrice)
+        print(f"{item.name} ({item.id})-------{avgHighPrice}")
         equipment_stats_dict = item.equipment.construct_json()
         row_list.append(
             {"name": item.name, "id": item.id, **item_prices, **equipment_stats_dict}
         )
     except ValueError as e:
         exception_count += 1
-        logger.debug(f"Could not get item price for {item.name} (id: {item.id})\n{e}")
+        logger.debug(f"Could not get item price for {item.name} (id: {item.id}): {e}")
 
     # json_pprint(equipment_stats_dict)
     # exit()
