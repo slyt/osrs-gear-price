@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+requires-python = ">=3.11"
+name = "osrs-gear-price"
+dynamic = ["version"]
+dependencies = [
+    "osrsbox",
+    "pandas",
+    "requests"]
+
+[tool.setuptools]
+packages = ["osrs_gear_price"]
+
+[tool.mypy]
+strict = true
+warn_unused_configs = true
+packages = "osrs_gear_price"
