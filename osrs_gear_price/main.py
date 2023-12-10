@@ -33,6 +33,8 @@ for item in items:
     if not item.tradeable_on_ge:
         continue
 
+    item.icon
+
     try:
         # Get the item price
         item_prices = ge.get_item(item.id)
@@ -41,7 +43,13 @@ for item in items:
         print(f"{item.name} ({item.id})-------{avgHighPrice}")
         equipment_stats_dict = item.equipment.construct_json()
         row_list.append(
-            {"name": item.name, "id": item.id, **item_prices, **equipment_stats_dict}
+            {
+                "name": item.name,
+                "id": item.id,
+                **item_prices,
+                **equipment_stats_dict,
+                "icon": item.icon,
+            }
         )
     except ValueError as e:
         exception_count += 1

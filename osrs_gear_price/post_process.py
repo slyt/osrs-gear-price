@@ -1,12 +1,21 @@
 # TODO: Load dataframe from pickle
 # TODO: Calculate the price per stat for each item
 # TODO: Plot price per stat for the highest stats for each stat category
+import base64
+import io
+
+import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
+import osrsbox
 import pandas as pd
+from matplotlib.offsetbox import AnnotationBbox
+from matplotlib.offsetbox import OffsetImage
+from PIL import Image
 
 # open pickle file
 df = pd.read_pickle("data/dataframe.pkl")
 
+print(df.columns)
 
 stats = [
     "attack_stab",
@@ -81,6 +90,7 @@ for stat in stats:
                     "avgLowPrice",
                     "avgPrice",
                     price_per_stat_avg,
+                    "icon",
                 ]
             ]
         )
@@ -89,13 +99,13 @@ for stat in stats:
         if df_top.empty:
             print(f"df_top is empty for stat: {stat} and slot: {slot}")
         else:
-            fig, ax = plt.subplots(figsize=(10, 10))
+            fig, ax = plt.subplots(figsize=(10, 5))
             df_top.plot(
                 ax=ax,
                 x="name",
                 y=[price_per_stat_avg, stat],
                 kind="barh",
-                title=f"Top {slot} items by {stat} price per stat",
+                title=f"{slot} -- {stat}",
             )
             ax.set_xlabel(f"{stat} price per stat", fontsize=12)
             ax.set_ylabel("Item Name", fontsize=12)
@@ -107,5 +117,23 @@ for stat in stats:
                 ax.annotate(
                     f"{p.get_width():,.0f}", (p.get_width() * 1.005, p.get_y() * 1.005)
                 )
+
+            # TODO: display the icon image next to each bar
+            for i, row in df_top.iterrows():
+                # get the icon image
+                icon = row["icon"]
+                # convert the icon image to a PIL image
+                img = Image.open(io.BytesIO(base64.b64decode(icon)))
+                im = OffsetImage(img, zoom=0.45)
+                ab = AnnotationBbox(
+                    im, (0, 1), xycoords="axes fraction", box_alignment=(0, 1)
+                )
+                # None of these work...
+                # ab = AnnotationBbox(im, (0, i), xybox=(-5, 0), xycoords=('data', 'data'), boxcoords="offset points", frameon=False)
+                # ab = AnnotationBbox(im, (-0.5, i), xycoords=('data', 'data'), box_alignment=(1, 0.5))
+                # ab = AnnotationBbox(im, (0, i), xybox=(-30., 0.), xycoords='data', boxcoords="offset points", box_alignment=(1, 0.5))
+                # ab = AnnotationBbox(im, (width, i), xycoords='data', box_alignment=(0.5, 0.5))
+                # ab = AnnotationBbox(im, (-0.5, i), xycoords=('data', 'data'), box_alignment=(1, 0.5))
+                ax.add_artist(ab)
 
             plt.show()
