@@ -5,7 +5,7 @@
 import requests
 import time
 import logging
-from util import json_pprint
+from osrs_gear_price.util import json_pprint
 from typing import TypedDict
 from typing import Union
 

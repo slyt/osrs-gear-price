@@ -8,8 +8,8 @@ import pandas as pd
 import requests
 
 
-from util import json_pprint
-import ge
+from osrs_gear_price.util import json_pprint
+from osrs_gear_price import GrandExchange
 
 ge = ge.GrandExchange()
 

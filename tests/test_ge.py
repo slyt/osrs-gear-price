@@ -1,6 +1,6 @@
 # test that the ge Class works as expected
 
-from src.ge import GrandExchange
+from osrs_gear_price import GrandExchange
 
 def test_grand_exchange():
     ge = GrandExchange()
