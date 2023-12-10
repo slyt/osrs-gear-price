@@ -11,6 +11,13 @@ dependencies = [
     "pandas",
     "requests"]
 
+[project.optional-dependencies]
+dev = ["pytest",
+"mypy",
+"black",
+"flake8",
+"pre-commit"]
+
 [tool.setuptools]
 packages = ["osrs_gear_price"]
 

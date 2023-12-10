@@ -1,16 +1,14 @@
-# create a class called GrandExchange that will request all of the data from the osrs wiki Grand Exchange API
-# It will have a function called get_price(item_id) that will return the current price of the item
-# It will cache the data for an hour. If an hour has passed, it will request the data again if get_price is called
+import json
+import logging
+import time
+from typing import TypedDict
 
 import requests
-import time
-import logging
-from osrs_gear_price.util import json_pprint
-from typing import TypedDict
-from typing import Union
+
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
+
 
 class ItemPrices(TypedDict):
     avgHighPrice: int
@@ -18,16 +16,25 @@ class ItemPrices(TypedDict):
     avgLowPrice: int
     lowPriceVolume: int
 
+
 class GrandExchange:
+    """
+    Class for retrieving and caching price data from
+    the OSRS wiki Grand Exchange API
+    """
+
     def __init__(self):
         self.user_agent = "price_plotting - @sir.nibbler"
         self.url_1h = "https://prices.runescape.wiki/api/v1/osrs/1h"
         self.url_latest = "https://prices.runescape.wiki/api/v1/osrs/latest"
 
         self.last_request_time = 0
-        self.cache_time = 3600 # 1 hour in seconds
-        self.cache = {} # contains entries like {item_id: {"price_high": 123}
-    
+        self.cache_time = 3600  # 1 hour in seconds
+        self.cache = {}  # contains entries like {item_id: {"price_high": 123}}
+        self.cache_miss = 0
+        self.cache_hit = 0
+        self.cache_refresh = 0
+
     def get_item(self, item_id: int | str) -> ItemPrices:
         """
         Returns an ItemPrices object for the given item_id
@@ -44,23 +51,26 @@ class GrandExchange:
         if time.time() - self.last_request_time > self.cache_time:
             self.update_cache()
             logger.debug("Updating cache")
+            self.cache_refresh += 1
 
         if str(item_id) in self.cache:
             item_prices: ItemPrices = self.cache[str(item_id)]
-            #json_pprint(item_prices)
+            self.cache_hit += 1
             return item_prices
         else:
             logger.debug(f"Item ID {item_id} not found in cache")
-            return None
+            self.cache_miss += 1
+            raise ValueError(
+                f"Item ID {item_id} not found in cache. It is probably not frequently traded on the GE"
+            )
+
     def update_cache(self):
-        headers = {'User-Agent': self.user_agent}
+        headers = {"User-Agent": self.user_agent}
         try:
             response = requests.get(self.url_1h, headers=headers)
             response.raise_for_status()
-            # set last request time
             self.last_request_time = time.time()
             self.cache = response.json()["data"]
-            #json_pprint(self.cache)
-        except:
-            logger.error(f"ERROR: Got non-200 status code {response.status_code} from {response.url}")
+        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
+            logger.error(f"While fetching data {response.url}, got error: {e}")
             return
