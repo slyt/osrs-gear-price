@@ -1,3 +1,5 @@
+# Creates a dataframe of all items in OSRS and their prices
+# and saves to a pickle for post-processing
 import logging
 
 import pandas as pd
@@ -9,8 +11,9 @@ from osrs_gear_price.util import format_number
 # from osrs_gear_price.util import json_pprint
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 logger.propagate = True
 
 ge = GrandExchange()
@@ -34,8 +37,6 @@ for item in items:
         # Get the item price
         item_prices = ge.get_item(item.id)
         avgHighPrice = item_prices["avgHighPrice"]
-        # format avgHighPrice to have commas at thousands, millions, etc
-        print(f"{item.name} ({item.id})-------{avgHighPrice}")
         avgHighPrice = format_number(avgHighPrice)
         print(f"{item.name} ({item.id})-------{avgHighPrice}")
         equipment_stats_dict = item.equipment.construct_json()
@@ -59,5 +60,6 @@ df = df.sort_values(by=["avgHighPrice"], ascending=False)
 print(df.head(10))
 print(df.columns)
 
-# TODO: Calculate the price per stat for each item
-# TODO: Plot price per stat for the highest stats for each stat category
+
+# Save dataframe to pickle file
+df.to_pickle("data/dataframe.pkl")

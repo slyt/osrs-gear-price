@@ -8,18 +8,39 @@ certifi==2023.11.17
     # via requests
 charset-normalizer==3.3.2
     # via requests
+contourpy==1.2.0
+    # via matplotlib
+cycler==0.12.1
+    # via matplotlib
 dataclasses==0.6
     # via osrsbox
+fonttools==4.46.0
+    # via matplotlib
 idna==3.6
     # via requests
+kiwisolver==1.4.5
+    # via matplotlib
+matplotlib==3.8.2
+    # via osrs-gear-price (pyproject.toml)
 numpy==1.26.2
-    # via pandas
+    # via
+    #   contourpy
+    #   matplotlib
+    #   pandas
 osrsbox==2.2.3
     # via osrs-gear-price (pyproject.toml)
+packaging==23.2
+    # via matplotlib
 pandas==2.1.4
     # via osrs-gear-price (pyproject.toml)
+pillow==10.1.0
+    # via matplotlib
+pyparsing==3.1.1
+    # via matplotlib
 python-dateutil==2.8.2
-    # via pandas
+    # via
+    #   matplotlib
+    #   pandas
 pytz==2023.3.post1
     # via pandas
 requests==2.31.0

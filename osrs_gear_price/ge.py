@@ -6,8 +6,9 @@ from typing import TypedDict
 import requests
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig()
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
 logger.propagate = True
 
 

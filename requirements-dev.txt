@@ -18,6 +18,10 @@ colorama==0.4.6
     # via
     #   click
     #   pytest
+contourpy==1.2.0
+    # via matplotlib
+cycler==0.12.1
+    # via matplotlib
 dataclasses==0.6
     # via osrsbox
 distlib==0.3.7
@@ -26,12 +30,18 @@ filelock==3.13.1
     # via virtualenv
 flake8==6.1.0
     # via osrs-gear-price (pyproject.toml)
+fonttools==4.46.0
+    # via matplotlib
 identify==2.5.33
     # via pre-commit
 idna==3.6
     # via requests
 iniconfig==2.0.0
     # via pytest
+kiwisolver==1.4.5
+    # via matplotlib
+matplotlib==3.8.2
+    # via osrs-gear-price (pyproject.toml)
 mccabe==0.7.0
     # via flake8
 mypy==1.7.1
@@ -43,17 +53,23 @@ mypy-extensions==1.0.0
 nodeenv==1.8.0
     # via pre-commit
 numpy==1.26.2
-    # via pandas
+    # via
+    #   contourpy
+    #   matplotlib
+    #   pandas
 osrsbox==2.2.3
     # via osrs-gear-price (pyproject.toml)
 packaging==23.2
     # via
     #   black
+    #   matplotlib
     #   pytest
 pandas==2.1.4
     # via osrs-gear-price (pyproject.toml)
 pathspec==0.12.0
     # via black
+pillow==10.1.0
+    # via matplotlib
 platformdirs==4.1.0
     # via
     #   black
@@ -66,10 +82,14 @@ pycodestyle==2.11.1
     # via flake8
 pyflakes==3.1.0
     # via flake8
+pyparsing==3.1.1
+    # via matplotlib
 pytest==7.4.3
     # via osrs-gear-price (pyproject.toml)
 python-dateutil==2.8.2
-    # via pandas
+    # via
+    #   matplotlib
+    #   pandas
 pytz==2023.3.post1
     # via pandas
 pyyaml==6.0.1

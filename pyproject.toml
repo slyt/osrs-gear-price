@@ -9,7 +9,8 @@ dynamic = ["version"]
 dependencies = [
     "osrsbox",
     "pandas",
-    "requests"]
+    "requests",
+    "matplotlib"]
 
 [project.optional-dependencies]
 dev = ["pytest",
